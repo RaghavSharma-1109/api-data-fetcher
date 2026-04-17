@@ -40,3 +40,7 @@ Ethereum: ₹225248 INR
 * Data processing
 * Input sanitization
 * Clean code structuring using OOP
+
+## 📸 Sample Output
+
+![Crypto Tracker Output](assets/screenshot.png)
