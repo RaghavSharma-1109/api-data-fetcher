@@ -5,7 +5,7 @@ class CryptoAPI:
     def load_crypto_url(self,param):
         #calls api through url
         try: 
-            response = requests.get(self.url,params=param)
+            response = requests.get(self.url)
             if response.status_code == 200:
                 data = response.json()
                 return data
