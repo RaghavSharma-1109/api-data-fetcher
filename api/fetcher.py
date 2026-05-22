@@ -56,3 +56,10 @@ if __name__ == "__main__":
         final_coins.append(coin)
     currency = input("Enter exchange currency: ")
     result = get_crypto_prices(final_coins,currency)
+
+# data returned from fetcher.py 
+#       {
+#           "success": True/False,
+#           "data": data or None,
+#           "error": Error Message
+#             }
