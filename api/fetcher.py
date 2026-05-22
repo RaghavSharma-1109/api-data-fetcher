@@ -3,7 +3,8 @@ def get_crypto_prices(coins:list,currency):
     url = "https://api.coingecko.com/api/v3/simple/price"
 
     final_coin = ",".join(coins)
-    url += f"?ids={final_coin}&vs_currencies={currency}"
+    final_currencies = ",".join(currency)
+    url += f"?ids={final_coin}&vs_currencies={final_currencies}"
 
     try:
         response = requests.get(url,timeout=5)
@@ -54,9 +55,15 @@ if __name__ == "__main__":
         if not coin:
             continue
         final_coins.append(coin)
-    currency = input("Enter exchange currency: ")
-    result = get_crypto_prices(final_coins,currency)
-
+    currencies= input("Enter exchange currency: ").lower().split(',')
+    final_currencies = []
+    for currency in currencies:
+        currency = currency.strip()
+        if not currency:
+            continue
+        final_currencies.append(currency)
+    result = get_crypto_prices(final_coins,final_currencies)
+    print(result)
 # data returned from fetcher.py 
 #       {
 #           "success": True/False,
