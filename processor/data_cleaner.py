@@ -1,24 +1,35 @@
-def process_crypto_data(data,coins,currencies):
-    # input and data validation ->
+def process_crypto_data(data:dict, coins, currencies):
     if not coins or not currencies:
-        return None
-    if data is None:
-        return None
-    if not isinstance(data,dict):
-        return None
-    if data == {}:
-        return None
-    # data extraction and processing ->
+        return {
+            "success" : False,
+            "data": None,
+            "error": "Invalid Input"
+        }
+    if not data["success"]:
+        return data
+    temp_data = data['data']
     structured_data = {}
+    is_missed = False
     for coin in coins:
-        if coin not in data:
-            continue
-        temp = {}
-        for currency in currencies:
-            if currency not in data[coin]:
-                continue
-
-            temp[currency] = data[coin][currency] 
-        if temp:
-            structured_data[coin] = temp
-    return structured_data
+        structured_data[coin] = {}
+        if coin in temp_data:
+            for currency in currencies:
+                if currency in temp_data[coin]:
+                    structured_data[coin][currency] = temp_data[coin][currency]
+                else:
+                    structured_data[coin][currency] = None
+        else:
+            is_missed = True
+            for currency in currencies:
+                structured_data[coin][currency] = None
+    if is_missed:
+        return {
+            "success":True,
+            "data":structured_data,
+            "error":"Data Is Missing"
+        }
+    return {
+            "success":True,
+            "data":structured_data,
+            "error":None
+        }
