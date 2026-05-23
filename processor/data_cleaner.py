@@ -7,10 +7,14 @@ def process_crypto_data(data:dict, coins, currencies):
         }
     if not data["success"]:
         return data
-    if data['error'] == None:
+    if data.get("data") != None:
         temp_data = data['data']
+    else:
+        return data
     structured_data = {}
-    is_missed = None
+    is_missed = {}
+    missed_coin = []
+    missed_currency = []
     for coin in coins:
         structured_data[coin] = {}
         if coin in temp_data:
@@ -18,18 +22,28 @@ def process_crypto_data(data:dict, coins, currencies):
                 if currency in temp_data[coin]:
                     structured_data[coin][currency] = temp_data[coin][currency]
                 else:
-                    is_missed = currency
+                    if currency not in missed_currency:
+                        missed_currency.append(currency)
+
                     structured_data[coin][currency] = None
         else:
-            is_missed = coin
+            
+
+            if coin not in missed_coin:
+                missed_coin.append(coin)
+                
+
             for currency in currencies:
                 structured_data[coin][currency] = None
-    if is_missed:
+    is_missed["missing_currencies"] = missed_currency
+    is_missed["missing_coins"] = missed_coin
+    if missed_coin or missed_currency:
         return {
             "success":True,
             "data":structured_data,
-            "error":"Data Is Missing"
+            "error": is_missed
         }
+
     return {
             "success":True,
             "data":structured_data,
