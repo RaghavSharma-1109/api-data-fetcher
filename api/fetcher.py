@@ -46,24 +46,6 @@ def get_crypto_prices(coins:list,currency):
         }
 
 
-
-if __name__ == "__main__":
-    coins = input("Enter cryptocoins: ").lower().split(',')
-    final_coins =[]
-    for coin in coins:
-        coin = coin.strip()
-        if not coin:
-            continue
-        final_coins.append(coin)
-    currencies= input("Enter exchange currency: ").lower().split(',')
-    final_currencies = []
-    for currency in currencies:
-        currency = currency.strip()
-        if not currency:
-            continue
-        final_currencies.append(currency)
-    result = get_crypto_prices(final_coins,final_currencies)
-    print(result)
 # data returned from fetcher.py 
 #       {
 #           "success": True/False,
