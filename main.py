@@ -1,62 +1,48 @@
-from datetime import datetime
 from api.fetcher import get_crypto_prices
-from processor.data_cleaner import process_crypto_data
-import os
-CURRENCIES = {
-    'usd': '$',
-    'inr': '₹',
-    'eur': '€',
-    'jpy': '¥' ,
-    'gbp': '£',
-}
-def price_formating(currencies):
-    for price in currencies:
-        symbol = CURRENCIES.get(price,"")
-        if symbol:
-            print(f"{price.upper()}: {symbol}{currencies[price]}")
-        else:
-            print(f"{price.upper()}: {currencies[price]}")
-def clean_keys(keys:list):
-    cleaned_list = []
-    for key in keys:
-        if key.strip() == '':
-            continue
-        cleaned_list.append(key.strip())
-    return cleaned_list
-
+from datacleaner.data_cleaner import process_crypto_data
+from processor.data_processor import process_for_storage
+from report_handler import save_report
 
 def main():
-    coins = input("Enter Crypto coins: ").lower().split(",")
-    cleaned_coins = clean_keys(coins)
-    currencies = input("Enter Exchange currencies: ").lower().split(",")
-    cleaned_currencies = clean_keys(currencies)
-    final_currencies = ",".join(cleaned_currencies)
-    # FETCHER CALL
-    raw_data = get_crypto_prices(cleaned_coins,final_currencies)
-    final_output = process_crypto_data(raw_data,cleaned_coins,cleaned_currencies)
-    # print(final_output)
-    if final_output is None:
-        print("Something went wrong while fetching data !!")
-    elif final_output == {}:
-        print("No valid crypto data found!!; recheck input fields.")
+    coins = input("Enter cryptocoins: ").lower().split(',')
+    final_coins =[]
+    for coin in coins:
+        coin = coin.strip()
+        if not coin:
+            continue
+        final_coins.append(coin)
+    currencies= input("Enter exchange currency: ").lower().split(',')
+    final_currencies = []
+    for currency in currencies:
+        currency = currency.strip()
+        if not currency:
+            continue
+        final_currencies.append(currency)
+    if not final_coins or not final_currencies:
+        print("No input received")
+        return
+    result = get_crypto_prices(final_coins,final_currencies)
+    if not result["success"]:
+        print(result['error'])
+        return
+    clean_result = process_crypto_data(result,final_coins,final_currencies)
+    if not clean_result['success']:
+        print(clean_result['error'])
+        return
+    processed_result = process_for_storage(clean_result)
+    if not processed_result['success']:
+        print(processed_result['error'])
+        return
+    # In Next version the user may enter its own filepath for report.
+    records = processed_result['data']
+    saved = save_report(records,filepath=None)
+    if saved['success']:
+        print(saved['message'])
+        return
     else:
-        timestamp = datetime.now()
-        timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")
-        print(f"Time: {timestamp}\n")
-        filepath = input("Enter filepath: ")
-        if not os.path.exists(filepath) or not os.path.getsize(filepath):
-            need_header = True
-        elif os.path.exists(filepath) and not os.path.getsize(filepath):
-            need_header = False
-        if need_header:
-            with open(filepath,"a") as file:
-                file.write("coin,currency,price,timestamps\n")
-            for coin in final_output.items():
-                for currency in coin.items():
-                    price = coin[currency]
-                    file.write(f"{coin},{currency},{price},{timestamp}\n")
-                
+        print(saved['error'])
+        return
+    
 
-
-if __name__ == "__main__":  
+if __name__ == "__main__":
     main()
