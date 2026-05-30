@@ -2,22 +2,19 @@ from api.fetcher import get_crypto_prices
 from datacleaner.data_cleaner import process_crypto_data
 from processor.data_processor import process_for_storage
 from report_handler import save_report
-
+def clean_data(items:list):
+    result = []
+    for data in items:
+        data = data.strip()
+        if not data:
+            continue
+        result.append(data)
+    return result
 def main():
     coins = input("Enter cryptocoins: ").lower().split(',')
-    final_coins =[]
-    for coin in coins:
-        coin = coin.strip()
-        if not coin:
-            continue
-        final_coins.append(coin)
+    final_coins =clean_data(coins)
     currencies= input("Enter exchange currency: ").lower().split(',')
-    final_currencies = []
-    for currency in currencies:
-        currency = currency.strip()
-        if not currency:
-            continue
-        final_currencies.append(currency)
+    final_currencies = clean_data(currencies)
     if not final_coins or not final_currencies:
         print("No input received")
         return
