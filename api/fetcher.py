@@ -1,13 +1,15 @@
 import requests
-def get_crypto_prices(coins:list,currency):
-    url = "https://api.coingecko.com/api/v3/simple/price"
+from config import url as api_url
+from config import timeout
 
+def get_crypto_prices(coins:list,currency):
+    
     final_coin = ",".join(coins)
     final_currencies = ",".join(currency)
-    url += f"?ids={final_coin}&vs_currencies={final_currencies}"
-
+    endpoint = f"?ids={final_coin}&vs_currencies={final_currencies}"
+    required_url = api_url + endpoint
     try:
-        response = requests.get(url,timeout=5)
+        response = requests.get(required_url,timeout=timeout)
         if response.status_code == 200:
             data = response.json()
             return {
