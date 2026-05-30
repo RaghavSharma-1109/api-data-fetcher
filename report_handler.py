@@ -1,4 +1,6 @@
 import os
+from config import filepath
+
 def formatter(data):
 
     coin = data.get("coin")
@@ -7,10 +9,8 @@ def formatter(data):
     timestamp = data.get("timestamp")
     new_line = f"{coin:<15}|{currency:<8}|{price:<13}|{timestamp:<15}\n"
     return new_line
-def save_report(records,filepath=None):
-    if not filepath:
-        filepath="crypto_data.txt"
-    
+def save_report(records):
+
     if not records:
         return {
             'success': False,
