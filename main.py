@@ -32,7 +32,7 @@ def main():
         return
     # In Next version the user may enter its own filepath for report.
     records = processed_result['data']
-    saved = save_report(records,filepath=None)
+    saved = save_report(records)
     if saved['success']:
         print(saved['message'])
         return
