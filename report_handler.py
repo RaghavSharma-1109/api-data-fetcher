@@ -1,5 +1,9 @@
+import logging
 import os
 from config import filepath
+
+
+logger = logging.getLogger(__name__)
 
 def formatter(data):
 
@@ -12,6 +16,7 @@ def formatter(data):
 def save_report(records):
 
     if not records:
+        logger.error('No Records of Data Found')
         return {
             'success': False,
             'data' : None,
@@ -27,6 +32,8 @@ def save_report(records):
         for data in records:
             new_line = formatter(data)
             f.write(new_line)
+    
+    logger.info('Data Saved Successfully')
     return {
         'success': True,
         'data': records,

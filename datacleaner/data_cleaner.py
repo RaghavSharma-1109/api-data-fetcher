@@ -1,15 +1,23 @@
+import logging
+
+
+logger= logging.getLogger(__name__)
+
 def process_crypto_data(data:dict, coins, currencies):
     if not coins or not currencies:
+        logger.error('No Coins/Currencies')
         return {
             "success" : False,
             "data": None,
             "error": "Invalid Input"
         }
     if not data["success"]:
+        logger.error('No Data to clean')
         return data
     if data.get("data") != None:
         temp_data = data['data']
     else:
+        logger.error('No Data Found')
         return data
     structured_data = {}
     is_missed = {}
@@ -38,12 +46,15 @@ def process_crypto_data(data:dict, coins, currencies):
     is_missed["missing_currencies"] = missed_currency
     is_missed["missing_coins"] = missed_coin
     if missed_coin or missed_currency:
+        logger.warning(f'Missing data - coins: {missed_coin}, currencies: {missed_currency}')
         return {
             "success":True,
             "data":structured_data,
             "error": is_missed
         }
+        logger.info('Data cleaned successfully')
 
+    logger.info('Data cleaned successfully')
     return {
             "success":True,
             "data":structured_data,
