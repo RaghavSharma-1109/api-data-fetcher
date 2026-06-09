@@ -15,6 +15,7 @@ def get_crypto_prices(coins:list,currency):
     required_url = api_url + endpoint
     try:
         response = requests.get(required_url,timeout=timeout)
+        response.raise_for_status()
         if response.status_code == 200:
             data = response.json()
             logger.info('API DATA FETCHED')
@@ -30,27 +31,27 @@ def get_crypto_prices(coins:list,currency):
             "data": None,
             "error": "API returned error response"
         }
-    except requests.exceptions.Timeout:
+    except requests.exceptions.Timeout as e:
         # timeout case
-        logger.error('SESSION TIMEOUT')
+        logger.error(f'SESSION TIMEOUT, {e}')
         return {
                 "success":False,
                 "data": None,
                 "error": "Request Timed out"
             }
 
-    except requests.exceptions.ConnectionError:
+    except requests.exceptions.ConnectionError as e:
         # no internet
-        logger.error('BAD NETWORK GATEWAY')
+        logger.error(f'BAD NETWORK GATEWAY, {e}')
         return {
             "success":False,
             "data": None,
             "error": "Connection error"
         }
 
-    except requests.exceptions.RequestException:
+    except requests.exceptions.HTTPError as e:
         # other request-related issues
-        logger.error('API call Failed')
+        logger.error(f'API call Failed, {e}')
         return {
             "success":False,
             "data": None,

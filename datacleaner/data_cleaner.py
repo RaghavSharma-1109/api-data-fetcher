@@ -52,7 +52,7 @@ def process_crypto_data(data:dict, coins, currencies):
             "data":structured_data,
             "error": is_missed
         }
-        logger.info('Data cleaned successfully')
+
 
     logger.info('Data cleaned successfully')
     return {
