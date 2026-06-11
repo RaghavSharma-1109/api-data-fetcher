@@ -12,6 +12,20 @@ def process_crypto_data(data, coins, currencies):
                 "data": None,
                 "error": "Invalid Coins/Currencies type"
             }
+        if not isinstance(data,dict):
+            logger.error('Invalid Data entered')
+            return {
+                "success" : False,
+                "data": None,
+                "error": "Invalid Data Input for DataCleaner"
+            }
+        if not isinstance(currencies,list):
+            logger.error('Currencies must be List')
+            return {
+                "success" : False,
+                "data": None,
+                "error": "Invalid Currencies Input for DataCleaner"
+            }
         if not coins or not currencies:
             logger.error('No Coins/Currencies')
             return {
@@ -20,21 +34,6 @@ def process_crypto_data(data, coins, currencies):
                 "error": "Invalid Input"
             }
 
-        if not isinstance(data,dict):
-            logger.error('Invalid Data entered')
-            return {
-                "success" : False,
-                "data": None,
-                "error": "Invalid Data Input for DataCleaner"
-            }
-        
-        if not isinstance(currencies,list):
-            logger.error('Currencies must be List')
-            return {
-                "success" : False,
-                "data": None,
-                "error": "Invalid Currencies Input for DataCleaner"
-            }
         if not data["success"]:
             logger.error('No Data to clean')
             return {
@@ -93,11 +92,23 @@ def process_crypto_data(data, coins, currencies):
             }
     except KeyError as e:
         logger.error(f'Invalid key, {e}')
-        return None
+        return {
+                "success" : False,
+                "data": None,
+                "error": e
+            }
     except TypeError as e:
         logger.error(f'Invalid Data type, {e}')
-        return None
+        return {
+                "success" : False,
+                "data": None,
+                "error": e
+            }
     except ValueError as e:
         logger.error(f'Invalid Input to Function, {e}')
-        return None
+        return {
+                "success" : False,
+                "data": None,
+                "error": e
+            }
 
