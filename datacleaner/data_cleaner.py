@@ -4,59 +4,75 @@ import logging
 logger= logging.getLogger(__name__)
 
 def process_crypto_data(data:dict, coins, currencies):
-    if not coins or not currencies:
-        logger.error('No Coins/Currencies')
-        return {
-            "success" : False,
-            "data": None,
-            "error": "Invalid Input"
-        }
-    if not data["success"]:
-        logger.error('No Data to clean')
-        return data
-    if data.get("data") != None:
-        temp_data = data['data']
-    else:
-        logger.error('No Data Found')
-        return data
-    structured_data = {}
-    is_missed = {}
-    missed_coin = []
-    missed_currency = []
-    for coin in coins:
-        structured_data[coin] = {}
-        if coin in temp_data:
-            for currency in currencies:
-                if currency in temp_data[coin]:
-                    structured_data[coin][currency] = temp_data[coin][currency]
-                else:
-                    if currency not in missed_currency:
-                        missed_currency.append(currency)
-
-                    structured_data[coin][currency] = None
+    try: 
+        if not coins or not currencies:
+            logger.error('No Coins/Currencies')
+            return {
+                "success" : False,
+                "data": None,
+                "error": "Invalid Input"
+            }
+        if not isinstance(coins,list):
+            logger.error('Coins must be List')
+            return None
+        if not isinstance(currencies,list):
+            logger.error('Currencies must be List')
+            return None
+        if not data["success"]:
+            logger.error('No Data to clean')
+            return data
+        if data.get("data") is not None:
+            temp_data = data['data']
         else:
-            
+            logger.error('No Data Found')
+            return None
+    
+        structured_data = {}
+        is_missed = {}
+        missed_coin = []
+        missed_currency = []
+        for coin in coins:
+            structured_data[coin] = {}
+            if coin in temp_data:
+                for currency in currencies:
+                    if currency in temp_data[coin]:
+                        structured_data[coin][currency] = temp_data[coin][currency]
+                    else:
+                        if currency not in missed_currency:
+                            missed_currency.append(currency)
 
-            if coin not in missed_coin:
-                missed_coin.append(coin)
+                        structured_data[coin][currency] = None
+            else:
                 
 
-            for currency in currencies:
-                structured_data[coin][currency] = None
-    is_missed["missing_currencies"] = missed_currency
-    is_missed["missing_coins"] = missed_coin
-    if missed_coin or missed_currency:
-        logger.warning(f'Missing data - coins: {missed_coin}, currencies: {missed_currency}')
+                if coin not in missed_coin:
+                    missed_coin.append(coin)
+                    
+
+                for currency in currencies:
+                    structured_data[coin][currency] = None
+        is_missed["missing_currencies"] = missed_currency
+        is_missed["missing_coins"] = missed_coin
+        if missed_coin or missed_currency:
+            logger.warning(f'Missing data - coins: {missed_coin}, currencies: {missed_currency}')
+            return {
+                "success":True,
+                "data":structured_data,
+                "error": is_missed
+            }
+        logger.info('Data cleaned successfully')
         return {
-            "success":True,
-            "data":structured_data,
-            "error": is_missed
-        }
+                "success":True,
+                "data":structured_data,
+                "error":None
+            }
+    except KeyError as e:
+        logger.error(f'Invalid key-(success), {e}')
+        return None
+    except TypeError as e:
+        logger.error(f'Invalid Data type, {e}')
+        return None
+    except ValueError as e:
+        logger.error(f'Invalid Input to Function, {e}')
+        return None
 
-
-    logger.info('Data cleaned successfully')
-    return {
-            "success":True,
-            "data":structured_data,
-            "error":None
-        }
