@@ -3,8 +3,15 @@ import logging
 
 logger= logging.getLogger(__name__)
 
-def process_crypto_data(data:dict, coins, currencies):
+def process_crypto_data(data, coins, currencies):
     try: 
+        if not isinstance(coins,list):
+            logger.error('Coins must be List')
+            return {
+                "success" : False,
+                "data": None,
+                "error": "Invalid Coins/Currencies type"
+            }
         if not coins or not currencies:
             logger.error('No Coins/Currencies')
             return {
@@ -12,20 +19,38 @@ def process_crypto_data(data:dict, coins, currencies):
                 "data": None,
                 "error": "Invalid Input"
             }
-        if not isinstance(coins,list):
-            logger.error('Coins must be List')
-            return None
+
+        if not isinstance(data,dict):
+            logger.error('Invalid Data entered')
+            return {
+                "success" : False,
+                "data": None,
+                "error": "Invalid Data Input for DataCleaner"
+            }
+        
         if not isinstance(currencies,list):
             logger.error('Currencies must be List')
-            return None
+            return {
+                "success" : False,
+                "data": None,
+                "error": "Invalid Currencies Input for DataCleaner"
+            }
         if not data["success"]:
             logger.error('No Data to clean')
-            return data
+            return {
+                "success" : False,
+                "data": None,
+                "error": "No (Success=True) Data entered in cleaner "
+            }
         if data.get("data") is not None:
             temp_data = data['data']
         else:
             logger.error('No Data Found')
-            return None
+            return {
+                "success" : False,
+                "data": None,
+                "error": "Unable to find data for cleaner"
+            }
     
         structured_data = {}
         is_missed = {}
@@ -67,7 +92,7 @@ def process_crypto_data(data:dict, coins, currencies):
                 "error":None
             }
     except KeyError as e:
-        logger.error(f'Invalid key-(success), {e}')
+        logger.error(f'Invalid key, {e}')
         return None
     except TypeError as e:
         logger.error(f'Invalid Data type, {e}')
