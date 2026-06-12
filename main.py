@@ -3,6 +3,7 @@ from api.fetcher import get_crypto_prices
 from datacleaner.data_cleaner import process_crypto_data
 from processor.data_processor import process_for_storage
 from report_handler import save_report
+from Validator.validator import validate
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -40,7 +41,11 @@ def main():
     if not result["success"]:
         logger.error(result['error'])
         return
-    clean_result = process_crypto_data(result,final_coins,final_currencies)
+    output = validate(result,final_coins,final_currencies)
+    if not output["success"]:
+        logger.error(output["error"])
+        return
+    clean_result = process_crypto_data(output,final_coins,final_currencies)
     if not clean_result['success']:
         logger.error(clean_result['error'])
         return
