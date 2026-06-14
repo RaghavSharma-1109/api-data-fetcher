@@ -13,8 +13,8 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 
-def process_for_storage(cleaned_data):
-    data = cleaned_data.get("data")
+def process_for_storage(data):
+
     output_data = []
     if not data:
         logger.error('No Data Found')

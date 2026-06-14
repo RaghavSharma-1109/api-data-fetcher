@@ -45,11 +45,11 @@ def main():
     if not output["success"]:
         logger.error(output["error"])
         return
-    clean_result = process_crypto_data(output,final_coins,final_currencies)
+    clean_result = process_crypto_data(output["data"],final_coins,final_currencies)
     if not clean_result['success']:
         logger.error(clean_result['error'])
         return
-    processed_result = process_for_storage(clean_result)
+    processed_result = process_for_storage(clean_result["data"])
     if not processed_result['success']:
         logger.error(processed_result['error'])
         return
