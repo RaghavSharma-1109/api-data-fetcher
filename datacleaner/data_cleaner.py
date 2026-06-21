@@ -35,9 +35,6 @@ def process_crypto_data(data, coins, currencies):
             }
 
         structured_data = {}
-        is_missed = {}
-        missed_coin = []
-        missed_currency = []
         for coin in coins:
             structured_data[coin] = {}
             if coin in data:
