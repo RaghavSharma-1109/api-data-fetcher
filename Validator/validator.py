@@ -20,7 +20,8 @@ def validate(raw_data,coins,currencies):
                 "error": 'Api does not return anything'
             }
         for coin in coins:
-            if coin.lower() not in response:
+            coin = coin.lower()
+            if coin not in response:
                 logger.error(f'Coin[{coin}] not in API response.')
                 return {
                     "success":False,
@@ -35,6 +36,7 @@ def validate(raw_data,coins,currencies):
                     "error":f"Coin {coin} data not fetched"
                 }
             for currency in currencies:
+                currency = currency.lower()
                 if currency not in response[coin]:
                     logger.error(f'Currency [{currency}] is Missing in response')
                     return {
@@ -56,3 +58,8 @@ def validate(raw_data,coins,currencies):
             "data":None,
             "error":"Invalid key from fetcher data"
         }
+data = {"bitcoin":{"inr":60000}}
+coin =['bitcoin']
+currency = ['inr']
+
+print(validate(data,coin,currency))
