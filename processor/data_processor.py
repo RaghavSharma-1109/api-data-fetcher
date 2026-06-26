@@ -61,4 +61,3 @@ def process_for_storage(data):
         "data": output_data,
         "error":None
     }
-    
