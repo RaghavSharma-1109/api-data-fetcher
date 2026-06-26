@@ -47,9 +47,27 @@ def process_for_storage(data):
 
             output_data.append(temp)
 
+    if len(output_data)==0:
+        logger.error('No coins had their price in data')
+        return {
+            'success':False,
+            'data': [],
+            'error': 'No coins had their price in data'
+        }
+
     logger.info('Data processed successfully')
     return {
         "success" : True,
         "data": output_data,
         "error":None
     }
+data = {
+            'bitcoin':{
+                'inr':None
+                },
+            'ethereum':{
+                'inr':None
+                }
+        }
+output = process_for_storage(data)
+print(output)
