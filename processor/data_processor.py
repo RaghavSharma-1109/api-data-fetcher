@@ -61,13 +61,4 @@ def process_for_storage(data):
         "data": output_data,
         "error":None
     }
-data = {
-            'bitcoin':{
-                'inr':None
-                },
-            'ethereum':{
-                'inr':None
-                }
-        }
-output = process_for_storage(data)
-print(output)
+    
