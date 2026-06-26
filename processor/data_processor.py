@@ -25,6 +25,14 @@ def process_for_storage(data):
     }
     
     for coin in data:
+
+        if not isinstance(data[coin],dict):
+            logger.error('Coin in data is not a dict')
+            return {
+            "success": False,
+            "data": None,
+            "error": "Coin in data is not a dict"
+            }
         for currency in data[coin]:
             temp = {}
             price = data[coin][currency]
@@ -38,6 +46,7 @@ def process_for_storage(data):
             temp["timestamp"] = timestamp
 
             output_data.append(temp)
+
     logger.info('Data processed successfully')
     return {
         "success" : True,
