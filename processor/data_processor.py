@@ -51,7 +51,7 @@ def process_for_storage(data):
         logger.error('No coins had their price in data')
         return {
             'success':False,
-            'data': [],
+            'data': None,
             'error': 'No coins had their price in data'
         }
 
