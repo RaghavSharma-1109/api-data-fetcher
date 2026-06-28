@@ -38,7 +38,7 @@ def formatter(data):
         'data':new_line,
         'error': None
     }
-def save_report(records):
+def save_report(records, path=filepath):
     if not isinstance(records,list):
         logger.error('Invalid Input to save_report')
         return {
@@ -53,8 +53,8 @@ def save_report(records):
             'data' : None,
             'error': 'No Records Found'
         }
-    is_exists = os.path.exists(filepath)
-    with open(filepath,"a") as f:
+    is_exists = os.path.exists(path)
+    with open(path,"a") as f:
         if not is_exists:   
             header = f"{'Coin':<15}|{'Currency':<8}|{'Price':<13}|{'Timestamp':<15}\n"
             f.write(header)
