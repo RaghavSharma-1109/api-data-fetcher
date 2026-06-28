@@ -1,9 +1,11 @@
 from report_handler import save_report
 from report_handler import formatter
 
-def test_output():
+def test_output(tmp_path):
+
     data = [{'coin':'bitcoin','currency':'inr','price':66000,'timestamp':'2024-03-01 15:30:00'}]
-    output =save_report(data)
+    tmp_file = tmp_path / "test_output.txt"
+    output =save_report(data,path=tmp_file)
 
     assert output['success'] is True
     assert output['data'] is not None
