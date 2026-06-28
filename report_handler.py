@@ -6,15 +6,46 @@ from config import filepath
 logger = logging.getLogger(__name__)
 
 def formatter(data):
-
-    coin = data.get("coin")
-    currency = data.get("currency")
-    price = data.get("price")
-    timestamp = data.get("timestamp")
-    new_line = f"{coin:<15}|{currency:<8}|{price:<13}|{timestamp:<15}\n"
-    return new_line
+    if not isinstance(data,dict):
+        logger.error('Invalid data in list')
+        return {
+            'success':False,
+            'data':None,
+            'error':'Invalid data in list'
+        }
+    try:
+        coin = data["coin"]
+        currency = data["currency"]
+        price = data["price"]
+        timestamp = data["timestamp"]
+        if coin is  None or currency is  None or price is None or timestamp is None:
+            logger.error('Invalid value: None')
+            return {
+                'success': False,
+                'data':None,
+                'error': 'Invalid value: None'
+            }    
+        new_line = f"{coin:<15}|{currency:<8}|{price:<13}|{timestamp:<15}\n"
+    except KeyError as e:
+        logger.error(e)
+        return {
+            'success':False,
+            'data':None,
+            'error':e
+        }
+    return {
+        'success':True,
+        'data':new_line,
+        'error': None
+    }
 def save_report(records):
-
+    if not isinstance(records,list):
+        logger.error('Invalid Input to save_report')
+        return {
+            'success': False,
+            'data': None,
+            'error':'Invalid Input to save_report'
+        }
     if not records:
         logger.error('No Records of Data Found')
         return {
@@ -30,9 +61,19 @@ def save_report(records):
             f.write(f"{'-'*15}|{'-'*8}|{'-'*13}|{'-'*15}\n")
         
         for data in records:
+            if not isinstance(data,dict):
+                logger.error('Invalid data in list')
+                return {
+                    'success':False,
+                    'data':None,
+                    'error':'Invalid data in list'
+                }
             new_line = formatter(data)
-            f.write(new_line)
-    
+            if new_line['success'] ==False:
+                logger.error('formatter failed')
+                return new_line
+            f.write(new_line['data'])
+
     logger.info('Data Saved Successfully')
     return {
         'success': True,
