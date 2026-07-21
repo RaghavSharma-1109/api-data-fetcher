@@ -1,4 +1,4 @@
-from Validator.validator import validate
+from validator.validate_api import validate
 def test_valid_data():
     data = {'data':{"bitcoin":{"inr":60000}}}
     coin =['bitcoin']
