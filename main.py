@@ -3,7 +3,7 @@ from api.fetcher import get_crypto_prices
 from datacleaner.data_cleaner import process_crypto_data
 from processor.data_processor import process_for_storage
 from report_handler import save_report
-from Validator.validator import validate
+from validator.validate_api import validate
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

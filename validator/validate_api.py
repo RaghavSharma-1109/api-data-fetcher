@@ -61,5 +61,3 @@ def validate(raw_data,coins,currencies):
 data = {"bitcoin":{"inr":60000}}
 coin =['bitcoin']
 currency = ['inr']
-
-print(validate(data,coin,currency))
