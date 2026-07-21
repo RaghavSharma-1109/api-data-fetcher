@@ -58,6 +58,3 @@ def validate(raw_data,coins,currencies):
             "data":None,
             "error":"Invalid key from fetcher data"
         }
-data = {"bitcoin":{"inr":60000}}
-coin =['bitcoin']
-currency = ['inr']
