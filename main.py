@@ -37,32 +37,35 @@ def main():
     if not final_coins or not final_currencies:
         logger.warning("No input received")
         return
-    result = get_crypto_prices(final_coins,final_currencies)
-    if not result["success"]:
-        logger.error(result['error'])
-        return
-    output = validate(result,final_coins,final_currencies)
-    if not output["success"]:
-        logger.error(output["error"])
-        return
-    clean_result = process_crypto_data(output["data"],final_coins,final_currencies)
-    if not clean_result['success']:
-        logger.error(clean_result['error'])
-        return
-    processed_result = process_for_storage(clean_result["data"])
-    if not processed_result['success']:
-        logger.error(processed_result['error'])
-        return
-    # In Next version the user may enter its own filepath for report.
-    records = processed_result['data']
-    saved = save_report(records)
-    if saved['success']:
-        logger.info(saved['message'])
-        return
-    else:
-        logger.warning(saved['error'])
-        return
-    
+    try:
+        result = get_crypto_prices(final_coins,final_currencies)
+        if not result["success"]:
+            logger.error(result['error'])
+            return
+        output = validate(result,final_coins,final_currencies)
+        if not output["success"]:
+            logger.error(output["error"])
+            return
+        clean_result = process_crypto_data(output["data"],final_coins,final_currencies)
+        if not clean_result['success']:
+            logger.error(clean_result['error'])
+            return
+        processed_result = process_for_storage(clean_result["data"])
+        if not processed_result['success']:
+            logger.error(processed_result['error'])
+            return
+        # In Next version the user may enter its own filepath for report.
+        records = processed_result['data']
+        saved = save_report(records)
+        if saved['success']:
+            logger.info(saved['message'])
+            return
+        else:
+            logger.warning(saved['error'])
+            return
+    except Exception as e:
+        logger.exception("Unexpected error in main pipeline")
+        return  
 
 if __name__ == "__main__":
     main()
