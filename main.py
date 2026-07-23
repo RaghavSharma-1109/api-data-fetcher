@@ -21,7 +21,16 @@ console_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
-def clean_data(items:list):
+def clean_data(items: list) -> list:
+    """
+    Strip whitespace from each string and remove empty entries.
+
+    Args:
+        items: list of raw strings (e.g. from comma-split user input).
+
+    Returns:
+        list of cleaned, non-empty strings.
+    """
     result = []
     for data in items:
         data = data.strip()
@@ -30,6 +39,12 @@ def clean_data(items:list):
         result.append(data)
     return result
 def main():
+    """
+    A top level orchestrator, that controls the flow of execution of pipeline.
+    ...
+    In case any file in the pipeline crashes or fails, main.py halts execution and logs the failure to app.log.
+    """
+
     coins = input("Enter cryptocoins: ").lower().split(',')
     final_coins =clean_data(coins)
     currencies= input("Enter exchange currency: ").lower().split(',')
@@ -54,7 +69,7 @@ def main():
         if not processed_result['success']:
             logger.error(processed_result['error'])
             return
-        # In Next version the user may enter its own filepath for report.
+        # In next version the user may enter its own filepath for report.
         records = processed_result['data']
         saved = save_report(records)
         if saved['success']:
